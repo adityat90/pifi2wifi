@@ -20,35 +20,30 @@
 
 #ADD EDUROAM (REQUIRES VALID LOGIN)
 
+#Modified for general use case
+
+MWIFI_SSID=$1;
+MWIFI_PASSWORD=$2;
+MAP_WIFI_SSID=$3;
+MAP_WIFI_PASSWORD=$4;
+
+# echo $MWIFI_SSID $MWIFI_PASSWORD $MAP_WIFI_SSID $MAP_WIFI_PASSWORD; 
+
 sudo mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.bak
 cat <<EOF | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf > /dev/null
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
-
 network={
-   ssid="eduroam"
-   scan_ssid=1
-   key_mgmt=WPA-EAP
-   pairwise=CCMP TKIP
-   group=CCMP TKIP
-   eap=PEAP
-   identity="XXX you@youruni.ac.uk XXX"
-   password="XXX yourpassword XXX"
-   ca_cert="/etc/certs/AddTrustExternalRootCA.pem"
-   phase1="peapver=0"
-   phase2="auth=MSCHAPV2"
+ssid="$MWIFI_SSID"
+psk="$MWIFI_PASSWORD"
+proto=RSN
+key_mgmt=WPA-PSK
+pairwise=CCMP
+group=CCMP
+auth_alg=OPEN
 }
 EOF
 sudo chmod 600 /etc/wpa_supplicant/wpa_supplicant.conf
-
-#ADD EDUROAM CERTIFICATE
-
-sudo mkdir /etc/certs
-cat <<EOF | sudo tee /etc/certs/AddTrustExternalRootCA.pem > /dev/null
------BEGIN CERTIFICATE-----
-XXX your institution's eduroam certificate XXX
------END CERTIFICATE-----
-EOF
 
 #CONFIGURE THE TWO WIFI NETWORKS (LEAVING WIRED FOR DEBUGGING)
 
@@ -116,14 +111,14 @@ cat <<EOF | sudo tee -a /etc/hostapd/hostapd.conf > /dev/null
 interface=wlan0
 #driver=nl80211
 driver=rtl871xdrv
-ssid=XXX Your new AP ssid XXX
+ssid=$MAP_WIFI_SSID
 hw_mode=g
 channel=6
 macaddr_acl=0
 auth_algs=1
 ignore_broadcast_ssid=0
 wpa=1
-wpa_passphrase=XXX Your new AP's passphrase XXX
+wpa_passphrase=$MAP_WIFI_PASSWORD
 wpa_key_mgmt=WPA-PSK
 wpa_pairwise=TKIP CCMP
 rsn_pairwise=TKIP CCMP
