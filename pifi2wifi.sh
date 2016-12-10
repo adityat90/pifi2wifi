@@ -30,6 +30,7 @@ MAP_WIFI_PASSWORD=$4;
 # echo $MWIFI_SSID $MWIFI_PASSWORD $MAP_WIFI_SSID $MAP_WIFI_PASSWORD; 
 
 sudo mv /etc/wpa_supplicant/wpa_supplicant.conf /etc/wpa_supplicant/wpa_supplicant.conf.bak
+sudo rm -rf /etc/wpa_supplicant/wpa_supplicant.conf
 cat <<EOF | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf > /dev/null
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
@@ -48,6 +49,7 @@ sudo chmod 600 /etc/wpa_supplicant/wpa_supplicant.conf
 #CONFIGURE THE TWO WIFI NETWORKS (LEAVING WIRED FOR DEBUGGING)
 
 sudo mv /etc/network/interfaces /etc/network/interfaces.bak
+sudo rm -rf /etc/network/interfaces
 cat <<EOF | sudo tee /etc/network/interfaces > /dev/null
 auto lo
 iface lo inet loopback
@@ -81,6 +83,7 @@ sudo cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.bak
 sudo sed -i: 's/^option domain-name/#option domain-name/g' /etc/dhcp/dhcpd.conf
 sudo sed -i: 's/^#authoritative;/authoritative;/g' /etc/dhcp/dhcpd.conf
 
+sudo rm -rf /etc/dhcp/dhcpd.conf
 cat <<EOF | sudo tee -a /etc/dhcp/dhcpd.conf > /dev/null
 subnet 192.168.42.0 netmask 255.255.255.0 {
 range 192.168.42.10 192.168.42.50;
@@ -107,6 +110,7 @@ sudo ln -sf /usr/sbin/hostapd.edimax /usr/sbin/hostapd
 sudo chown root:root /usr/sbin/hostapd 
 sudo chmod 755 /usr/sbin/hostapd
 
+sudo rm -rf /etc/hostapd/hostapd.conf
 cat <<EOF | sudo tee -a /etc/hostapd/hostapd.conf > /dev/null
 interface=wlan0
 #driver=nl80211
