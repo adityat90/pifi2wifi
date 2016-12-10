@@ -99,7 +99,7 @@ sudo sed -i: 's/^INTERFACES=""/INTERFACES="wlan0"/g' /etc/default/isc-dhcp-serve
 
 sudo apt-get install hostapd
 
-wget http://www.daveconroy.com/wp3/wp-content/uploads/2013/07/hostapd.zip
+# wget http://www.daveconroy.com/wp3/wp-content/uploads/2013/07/hostapd.zip
 unzip hostapd.zip 
 sudo mv /usr/sbin/hostapd /usr/sbin/hostapd.bak
 sudo mv hostapd /usr/sbin/hostapd.edimax 
